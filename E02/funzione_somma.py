@@ -1,7 +1,7 @@
 # Funzione che calcola la somma dei primi n numeri naturali
 while True:
     try:
-        N = int(input("Inserisci un numero naturale: "))
+        N = int(input("Inserire un numero naturale: "))
         if N >= 0:
             break
         else:
