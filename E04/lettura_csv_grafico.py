@@ -76,3 +76,4 @@ dataframe_minimo = dataframe.loc[(dataframe['Time'] < 948.3) & (dataframe['Time'
 x2 = dataframe_minimo['TIME']
 y2 = dataframe_minimo['PDCSAP_FLUX']
 sigma_y2 = dataframe_minimo['PDCSAP_FLUX_ERR']
+
