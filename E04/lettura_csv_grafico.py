@@ -19,7 +19,7 @@ plt.plot(x1, y1, 'o', color='blue', label='flusso')
 
 # Formattazione grafico
 plt.title('Grafico', fontsize=13, fontweight='bold')
-plt.xlabel('Tempo [$s$]', fontsize=11)
+plt.xlabel('Tempo [$BJD - 2454833$]', fontsize=11)
 plt.ylabel('Flusso di elettroni [$e^-/s$]', fontsize=11)
 plt.xlim(left=x1.min(), right=x1.max())
 plt.ylim(bottom=y1.min(), top=y1.max())
@@ -128,3 +128,4 @@ if chiedi_conferma("Salvare il grafico?"):
     if chiedi_conferma("Vuoi salvarlo in .pdf?"):
         plt.savefig("grafico_intorno.pdf", bbox_inches="tight")
         print("Salvato in .pdf.")
+
