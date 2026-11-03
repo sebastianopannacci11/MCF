@@ -1,9 +1,7 @@
-from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-csv_path = Path(__file__).parent.parent / "kplr010666592-2011240104155_slc.csv"
 dataframe = pd.read_csv("kplr010666592-2011240104155_slc.csv")
 
 print(*dataframe.columns.tolist())
