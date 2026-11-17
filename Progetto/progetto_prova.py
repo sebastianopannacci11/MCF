@@ -4,7 +4,7 @@ from scipy.stats import norm, gamma, uniform
 import Moduli as mod
 
 # --- Esempio d'uso e Visualizzazione ---
-x, signal, k_sampled, A_sampled = mod.generate_wave_packet(
+x, signal, k_sampled, A_sampled = mod.genera_pacchetto_onda_discreto(
     N=200, 
     freq_dist=norm(loc=6.0, scale=0.5), # Gaussiana attorno a k=6
     amp_mode='pdf',
