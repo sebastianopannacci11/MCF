@@ -1,4 +1,4 @@
-# Oscillatore anarmonico
+# Oscillatore
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,6 +8,7 @@ def parse():
     parser = argparse.ArgumentParser(description='Opzioni di potenziale da analizzare')
 
     parser.add_argument('-V', '--potenziale', type=str, default='x6', choices=['x2', 'x4', 'x6', 'x3/2'], help='Tipo di potenziale che si può scegliere da analizzare (default: x6)')
+    parser.add_argument('-c', '--confronto', type=str, nargs=2, default=['x2', 'x6'], choices=['x2', 'x4', 'x6', 'x3/2'], help='Due potenziali da confrontare nel secondo grafico (default: x2 x6)')
     parser.add_argument('-m', '--massa', type=float, default=1, help='Valore della massa (default: 1)')
     parser.add_argument('-k', '--costante', type=float, default=0.1, help='Valore della costante nel potenziale (default: 0.1)')
 
@@ -46,17 +47,17 @@ if __name__ == '__main__':
 
     # Dizionario per mappare le opzioni di potenziale alle funzioni e alla relativa scrittura LaTeX
     pot = {
-        'x2' : (pot_1, r'$V(x) = k x^2$'),
-        'x4' : (pot_2, r'$V(x) = k x^4$'),
-        'x6' : (pot_3, r'$V(x) = k x^6$'),
-        'x3/2' : (pot_4, )
+        'x2'    : (pot_1, r'$V(x) = k x^2$'),
+        'x4'    : (pot_2, r'$V(x) = k x^4$'),
+        'x6'    : (pot_3, r'$V(x) = k x^6$'),
+        'x3/2'  : (pot_4, r'$V(x) = k |x|^{3/2}$')
     }
 
     # Dati per il potenziale
     x = np.linspace(-2, 2, 2000)
 
     # Dati per il periodo (ampiezze x_0 > 0)
-    x_0 = np.linspace(0.1, 5, 10000)
+    x_0 = np.linspace(0.1, 5, 1000)
     pot_scelto, label_pot = pot[args.potenziale]
     t = np.array([periodo(massa=args.massa, potenziale=pot_scelto, k=args.costante, x_0=amp) for amp in x_0])
 
@@ -87,21 +88,22 @@ if __name__ == '__main__':
     x = np.linspace(-2, 2, 2000)
     
     # Dati per il periodo (ampiezze x_0 > 0)
-    x_0_pot1    = np.linspace(0.1, 5, 10000)
-    t_pot1      = np.array([periodo(massa=args.massa, potenziale=pot_1, k=args.costante, x_0=amp) for amp in x_0])
+    pot_c1, label_c1 = pot[args.confronto[0]]
+    pot_c2, label_c2 = pot[args.confronto[1]]
 
-    x_0_pot2    = np.linspace(0.1, 5, 10000)
-    t_pot2      = np.array([periodo(massa=args.massa, potenziale=pot_3, k=args.costante, x_0=amp) for amp in x_0])
+    x_0_confronto = np.linspace(0.1, 5, 1000)
+
+    t_pot1      = np.array([periodo(massa=args.massa, potenziale=pot_c1, k=args.costante, x_0=amp) for amp in x_0_confronto])
+    t_pot2      = np.array([periodo(massa=args.massa, potenziale=pot_c2, k=args.costante, x_0=amp) for amp in x_0_confronto])
 
     # Grafico del periodo in funzione di x_0
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7))
     
-    ax1.plot(x, pot_1(k=args.costante, x=x), color='navy', label=r'Potenziale $V_1(x) = k x^2$')
-    ax1.plot(x, pot_2(k=args.costante, x=x), color='darkorange', label=r'Potenziale $V_2(x) = k x^6$')
-    ax2.plot(x_0_pot1, t_pot1, color='navy', label=r'Periodo $T$ in funzione di $x_0$ per il potenziale $V_1(x)$')
-    ax2.plot(x_0_pot2, t_pot2, color='darkorange', label=r'Periodo $T$ in funzione di $x_0$ per il potenziale $V_2(x)$')
+    ax1.plot(x, pot_c1(k=args.costante, x=x), color='navy', label=f'Potenziale 1: {label_c1}')
+    ax1.plot(x, pot_c2(k=args.costante, x=x), color='darkorange', label=f'Potenziale 2: {label_c2}')
+    ax2.plot(x_0_confronto, t_pot1, color='navy', label=f'Periodo $T$ per {label_c1}')
+    ax2.plot(x_0_confronto, t_pot2, color='darkorange', label=f'Periodo $T$ per {label_c2}')
 
-    
     # Formattazione grafico
     ax1.set_title('Potenziale')
     ax2.set_title('Periodo di oscillazione in funzione di $x_0$')
