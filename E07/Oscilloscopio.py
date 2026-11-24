@@ -5,20 +5,44 @@ import pandas as pd
 
 # Funzione per le derivata con la differenza centrale
 # f'(i) =  [f(i+n)-f(i-n)] / [x(i+n)-x(i-n)]
+'''
 def derivata(x, y, n=1):
-    '''
+    
     Metodo che calcola la derivata (differenza centrale):
     input:
     - x: punti;
     - y: funzione dei punti x;
     - n: distanza dal punto x;
-    '''
+    
     x = np.asarray(x)
     y = np.asarray(y)
     dy = y[2*n:] - y[:-2*n]
     dx = x[2*n:] - x[:-2*n]
     
     return x[n:-n], dy / dx
+'''
+
+def derivata(xx, yy, nh):
+    ###
+    # Conversione per compatibilità con le Series di Pandas
+    xx = np.asarray(xx)
+    yy = np.asarray(yy)
+
+    # Controllo che nh sia pari: con nh dispari la lunghezza finale sarebbe N-1 e i punti risulterebbero sfalsati
+    if nh % 2 != 0:
+        raise ValueError("Il parametro nh deve essere un numero intero pari.")
+    ###
+    dd = yy[nh:] - yy[:-nh]
+    hh = xx[nh:] - xx[:-nh]
+    for ih in range(int(nh/2)):
+        dd = np.append(yy[nh-ih-1]-yy[0], dd)
+        dd = np.append(dd, yy[-1]-yy[-(nh-ih)])
+    
+        hh = np.append(xx[nh-ih-1]-xx[0], hh)
+        hh = np.append(hh, xx[-1]-xx[-(nh-ih)])
+    
+    return dd/hh
+
 
 # dati importati da oscilloscopio.csv
 
@@ -76,14 +100,14 @@ plt.show()
 n = 100
 m = 100
 
-tempi1, der1 = derivata(tempo, segnale1, n)
-tempi2, der2 = derivata(tempo, segnale2, m)
+der1 = derivata(tempo, segnale1, n)
+der2 = derivata(tempo, segnale2, m)
 
 # Grafico dei segnali in funzione del tempo
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7))
 
-ax1.plot(tempi1, der1, color='green', label=r'$segnale 1$')
-ax2.plot(tempi2, der2, color='purple', label=r'$segnale 2$')
+ax1.plot(tempo, der1, color='green', label=r'$segnale 1$')
+ax2.plot(tempo, der2, color='purple', label=r'$segnale 2$')
 
 # Formattazione del grafico 
 ax1.set_title(f'Derivata del segnale 1 con n = {n}')
@@ -117,8 +141,8 @@ mask_min1 = (der1[:-1] < 0) & (der1[1:] >= 0) & (s1_rid[:-1] < np.mean(s1_rid) -
 mask_min2 = (der2[:-1] < 0) & (der2[1:] >= 0) & (s2_rid[:-1] < np.mean(s2_rid) - np.std(s2_rid))
 
 # Posizioni (tempi) e valori dei minimi trovati
-t_min1, val_min1 = tempi1[:-1][mask_min1], s1_rid[:-1][mask_min1]
-t_min2, val_min2 = tempi2[:-1][mask_min2], s2_rid[:-1][mask_min2]
+t_min1, val_min1 = tempo[:-1][mask_min1], s1_rid[:-1][mask_min1]
+t_min2, val_min2 = tempo[:-1][mask_min2], s2_rid[:-1][mask_min2]
 
 print("Segnale 1 - Tempi dei minimi:", t_min1)
 print("Segnale 1 - Valori dei minimi:", val_min1)
@@ -144,3 +168,25 @@ ax1.legend()
 ax2.legend()
 plt.tight_layout()
 plt.show()
+'''
+def my_derivative_vh(xx, yy, nh):
+    ###
+    # Conversione per compatibilità con le Series di Pandas
+    xx = np.asarray(xx)
+    yy = np.asarray(yy)
+
+    # Controllo che nh sia pari: con nh dispari la lunghezza finale sarebbe N-1 e i punti risulterebbero sfalsati
+    if nh % 2 != 0:
+        raise ValueError("Il parametro nh deve essere un numero intero pari.")
+    ###
+    dd = yy[nh:] - yy[:-nh]
+    hh = xx[nh:] - xx[:-nh]
+    for ih in range(int(nh/2)):
+        dd = np.append(yy[nh-ih-1]-yy[0], dd)
+        dd = np.append(dd, yy[-1]-yy[-(nh-ih)])
+    
+        hh = np.append(xx[nh-ih-1]-xx[0], hh)
+        hh = np.append(hh, xx[-1]-xx[-(nh-ih)])
+    
+    return dd/hh
+    '''
